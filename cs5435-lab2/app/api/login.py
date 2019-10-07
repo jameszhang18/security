@@ -14,9 +14,6 @@ from app.models.session import (
     get_session_by_username,
     logged_in,
 )
-from app.models.breaches import get_breaches
-from app.scripts.breaches import load_breaches
-from app.util.hash import hash_sha256, hash_pbkdf2
 
 
 @get('/login')
@@ -29,7 +26,6 @@ def do_login(db):
     password = request.forms.get('password')
     error = None
     user = get_user(db, username)
-    print(user)
     if (request.forms.get("login")):
         if user is None:
             response.status = 401
@@ -40,30 +36,10 @@ def do_login(db):
         else:
             pass  # Successful login
     elif (request.forms.get("register")):
-        # TODO: ex2.1
-        load_breaches(db)  # Load here -> load each time
-        (plaintext_breaches, hashed_breaches, salted_breaches) = get_breaches(db, username)
-        for breach in plaintext_breaches:
-            if breach.password == password:
-                response.status = 401
-                error = "Credential is already breached for {} and current password.".format(username)
-                break
-        if not error:
-            for breach in hashed_breaches:
-                if breach.hashed_password == hash_sha256(password):
-                    response.status = 401
-                    error = "Credential is already breached for {} and current password.".format(username)
-                    break
-        if not error:
-            for breach in salted_breaches:
-                if breach.salted_password == hash_pbkdf2(password, breach.salt):
-                    response.status = 401
-                    error = "Credential is already breached for {} and current password.".format(username)
-                    break
-        if not error and user is not None:
+        if user is not None:
             response.status = 401
             error = "{} is already taken.".format(username)
-        if not error:
+        else:
             create_user(db, username, password)
     else:
         response.status = 400
@@ -73,9 +49,9 @@ def do_login(db):
         if existing_session is not None:
             delete_session(db, existing_session)
         session = create_session(db, username)
-        response.set_cookie("session", str(session.get_id()))
-        return redirect("/{}".format(username))
-    return template("login", error=error)
+        response.set_cookie("session", session.get_id())
+        return redirect("/profile/{}".format(username))
+    return template("login", login_error=error)
 
 @post('/logout')
 @logged_in
