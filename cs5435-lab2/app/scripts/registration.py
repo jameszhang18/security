@@ -7,6 +7,7 @@ REGISTRATION_PATH = "app/scripts/registration.csv"
 def register_users(db):
     create_user(db, "attacker", "attacker")
     create_user(db, "victim", "victim")
+    create_user(db, "my", "my")
     with open(REGISTRATION_PATH) as f:
         r = reader(f, delimiter=' ')
         header = next(r)

