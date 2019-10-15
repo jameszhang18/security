@@ -24,6 +24,7 @@ def do_payment(db, session):
         )
     ).fetchone()
     payment_amount = int(request.forms.get('amount'))
+    payment_token = str(request.forms.get('token'))
     error = None
     if (sender.get_coins() < payment_amount):
         response.status = 400
@@ -37,6 +38,9 @@ def do_payment(db, session):
     elif (recipient['username'] == sender.username):
         response.status = 400
         error = "Cannot pay self."
+    elif (session.get_id() != payment_token):
+        response.status = 400
+        error = "token does not match."
     else:
         sender.debit_coins(payment_amount)
         db.execute(

