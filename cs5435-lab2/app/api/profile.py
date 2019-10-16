@@ -19,13 +19,13 @@ def profile(db, session, username):
             "profile",
             user=session_user,
             session_user=session_user,
-            session_token=session.get_id(),
             error="User {} does not exist".format(username)
         )
     return template(
         "profile",
         user=user,
         session_user=session_user,
+        session_token=session.get_id()
     )
 
 @post('/aboutme')
