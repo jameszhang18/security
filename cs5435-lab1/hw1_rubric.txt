@@ -1,0 +1,72 @@
+Grading rubric for hw1 questions
+
+Each question is worth four points total. Each question's rubric will list five point values
+(0 through 4) along with the minimum conditions that should be met for the student to earn each point value.
+These conditions won't cover every possible situation - use your best judgement when rounding up or down for partial credit.
+
+For 2.1 and 2.2
+
+
+For each coding question, the student will receive zero points if they did not submit the file or
+submitted an unchanged version of the file. 
+
+
+Exercise 1.1
+	 0/4 - See above
+	 1/4 - Student's stuff.py contains a credential_stuffing_attack function which iterates over its input
+	 2/4 - credential_stuffing_attack calls the attempt_login function on each element of its input, and can be run against the web server by invoking stuff.py
+	 3/4 - credential_stuffing_attack outputs some correct username/password combinations
+	 4/4 - stuff.py outputs all correct username/password combinations
+
+Exercise 1.4
+	 0/4 - See above
+	 1/4 - Student's brute.py file calls pbkdf correctly (per app/hash/util.py)
+	 2/4 - Student's brute_force_attack iterates over the passwords from common_passwords.txt, calling pbkdf on each one
+	 3/4 - N/A
+	 4/4 - Student correctly recovers the plaintext of any password in common_passwords.txt, given the pbkdf hash on a random salt
+
+Exercise 2.1
+	 0/4 - See above
+	 1/4 - Breaches are loaded correctly from the files, but the check is not performed in login.py
+	 2/4 - Some check against the breach is performed in login.py, but it does not work
+	 3/4 - The check in login.py causes registration to fail correctly in some cases, but not others.
+	 4/4 - Any breached username/password pair from the breaches causes registration to fail, by returning an error to the user.
+
+Exercise 2.2
+	 0/4 - See above
+	 1/4 - User data model is correctly changed, but create_user does not hash passwords correctly
+	 2/4 - create_user hashes passwords correctly, but hashes are not checked on login
+	 3/4 - hashes are checked, but not correctly (i.e., login fails when it should succeed or vice versa)
+	 4/4 - Newly registered user passwords are stored hashed with a random salt. Login succeeds for a newly-registered user with the correct password.
+
+
+
+Exercise 3.1  (out of 4) 
+   Part 1 
+   +1   computational limits for offline attacks
+   +1   network and/or rate limits for online attacks
+
+   Part 2 
+   +1   sum_{i=1}^q p(pw_i)  where pw_1,pw_2,... is an ordering such that
+          p(pw_i) >= p(pw_j) for i > j
+
+   Part 3
+   +1   for any reasonable example where Shannon entropy H is such that 2^-H
+        << q-success rate for small q. In words, the shannon entropy is reasonably
+        large, whereas guessing success rate for small q is also quite large
+
+Exercise 3.2  (out of 1)
+  +1    Pepper is meant to ensure that if hash database leaks, but not pepper,
+        then an attacker cannot perform brute force attacks
+
+Exercise 3.3 (out of 2)
+  0/2    No answer 
+  1/2    Add a mechanism for rate limiting login requests in general
+  2/2    Add a mechanism to lock accounts after some reasonable number of
+         failed login attempts
+
+Exercise 3.4 (out of 3)
+  0/3     No answer
+  +1      Usability problems of character class requirements
+  +1      Security problems of character class requirements
+  +1      Modern strength meter like zxcvbn or Melicher et al. to nudge users

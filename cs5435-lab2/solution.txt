@@ -1,0 +1,25 @@
+Short Answers
+
+1.6.1 (assuming a Javascript-based countermeasure) (2 points)
+This countermeasure prevents HTTPOnly because setting that flag prevents Javascript from reading the cookie, but to submit the cookie along with the form from Javascript you have to read it using JS
+An XSS vulnerability in the page can result in the session token being stolen by injected JS
+1.6.2 (2 points)
+No, the countermeasure does not prevent login CSRF. This is because the countermeasure uses a session token of a logged-in user as a CSRF token, but you can’t protect the login page with the session token that you only get after logging in (it’s a chicken-and-egg problem). To build a login CSRF countermeasure you can embed an anonymous CSRF token in the login form, then use the session token for other sites.
+
+2.6
+For another reflected XSS attack /pay without CSRF protection can lead to an XSS attack on the payment_error displayed. (2 points)
+For another stored XSS attack, /login stores user's username, which is displayed when visited /profile/<username>. (2 points)
+
+2.8.1 (2 points)
+Reflected XSS happens when a user visits a malicious website that has a link/redirect to the vulnerable website containing a javascript payload. in contrast, stored xss happens when a malicious user of the vulnerable site injects a javascript payload by storing it in some persistent state of the application (take the Myspace worm from lecture - this is stored xss because Kamkar stored the JS payload in his profile, and thus in myspace’s database, and when a user visits his profile the myspace application reads the payload from storage and delivers it to the user.)
+ 
+2.8.2 (2 points)
+Javascript from any origin can read that website’s (call it x.com) state. Basically, if the user visits any website (across the entire internet) that contains an XSS vulnerability, all the state from x.com is vulnerable.
+
+3.2.1 (2 points)
+No because the attacker can just send a raw request and bypass client-side filtering
+
+3.2.2 (2 points)
+Server-side sanitization is much simpler to implement but is not foolproof: unless the sanitizer literally removes every possible way to inject code, SQL injection is still possible (though, of course, naive injection attacks will probably fail). In contrast, prepared statements require some setup on the server side (i.e. you have to know how to turn them on in MySQL or whatever) but they are much more secure, because they ensure adversarially-controlled inputs cannot affect how the query is parsed. In short, prepared statements actually enforce a separation between code and data. Mixing these two things is the “original sin” that allows SQL injection.
+
+(In my opinion prepared statements are way better, but there’s no right answer here - i just want the students to think about the tradeoffs.)s
