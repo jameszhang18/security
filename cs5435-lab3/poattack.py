@@ -39,7 +39,6 @@ def po_attack_2blocks(po, ctx):
     assert len(ctx) == 2*po.block_length, "This function only accepts 2 block "\
         "cipher texts. Got {} block(s)!".format(len(ctx)/po.block_length)
     c0, c1 = list(split_into_blocks(ctx, po.block_length))
-    msg = ''
     # TODO: Implement padding oracle attack for 2 blocks of messages.
     return msg
 
