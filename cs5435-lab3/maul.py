@@ -30,11 +30,11 @@ def do_attack():
 	print(hex_cookie)
 	cookie = bytes.fromhex(hex_cookie)
 	print(cookie)
-	bbyte =bytearray(cookie)
-	print(bbyte)
-	bbyte[0] ^=1
-	print(bbyte)
-	admin_cookie = bytes(bbyte)
+	byte_cookie =bytearray(cookie)
+	print(byte_cookie)
+	byte_cookie[0] ^=1
+	print(byte_cookie)
+	admin_cookie = bytes(byte_cookie)
 	sess.cookies.set('admin',None)
 	sess.cookies.set('admin',admin_cookie.hex())
 

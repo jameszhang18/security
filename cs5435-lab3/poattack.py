@@ -79,6 +79,7 @@ def po_attack_2blocks(po, ctx):
 
     # print(p2)
     decoded = [0] * po.block_length
+
     for i in range(15,-1,-1):
         pb = (po.block_length-i)
         for b in range(0,256):
@@ -98,14 +99,14 @@ def po_attack_2blocks(po, ctx):
                     decoded[i] = b ^ c0[i] ^ pb
                     break
     
-    plain = [v ^ v1 for v,v1 in zip(c0,decoded)]
-    plain = ''.join(map(chr,plain))
+   # plain = [v ^ v1 for v,v1 in zip(c0,decoded)]
+    plain = ''.join(map(chr,decoded))
     print(plain)
 
 
     msg = ''
     # TODO: Implement padding oracle attack for 2 blocks of messages.
-    return msg
+    return plain
 
 def po_attack(po, ctx):
     """
@@ -117,17 +118,13 @@ def po_attack(po, ctx):
     nblocks = len(ctx_blocks)
     # [Completed]: Implement padding oracle attack for arbitrary length message.
     P = ""
-    for i in xrange(nblocks-1):
-        print '\n=== Block: {}/{} ==='.format(i, nblocks)
-        t_start = time.time()
-
+    for i in range(nblocks-1):
         # Attack block by block
         ctx_2blocks = ctx_blocks[i] + ctx_blocks[i+1]
         p = po_attack_2blocks(po, ctx_2blocks)
-        P = P + p 
 
-        t_end = time.time() 
-        print 'Time: {}s'.format(t_end-t_start) 
+        P += p 
+    print(P)
     return P
 
 def do_attack(hex_cookie):
@@ -135,9 +132,8 @@ def do_attack(hex_cookie):
     po_attack(po,bytes.fromhex(hex_cookie))
 
 if __name__ == "__main__":
-    hex_cookie="e9fae094f9c779893e11833691b6a0cd3a161457fa8090a7a789054547195e606035577aaa2c57ddc937af6fa82c013d"
-    # hex_cookie = "e9fae094f9c779893e11833691b6a0cd3a161457fa8090a7a789054547195e60"
-    print("sss")
+    # hex_cookie="e9fae094f9c779893e11833691b6a0cd3a161457fa8090a7a789054547195e606035577aaa2c57ddc937af6fa82c013d"
+    hex_cookie = "e9fae094f9c779893e11833691b6a0cd3a161457fa8090a7a789054547195e60"
     do_attack(hex_cookie)
 
 
