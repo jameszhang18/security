@@ -27,6 +27,7 @@ def do_attack():
 	assert(do_login_form(sess, uname,pw))
 	#Maul the admin cookie in the 'sess' object here
 	hex_cookie = sess.cookies.get('admin')
+	print(hex_cookie)
 	cookie = bytes.fromhex(hex_cookie)
 	print(cookie)
 	bbyte =bytearray(cookie)
