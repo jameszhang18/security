@@ -63,21 +63,6 @@ def po_attack_2blocks(po, ctx):
     print(po.block_length)
     c0, c1 = list(split_into_blocks(ctx, po.block_length))
 
-    # i2 = [0] * po.block_length
-    # p2 = [0] * po.block_length
-    # for i in range(po.block_length-1,-1,-1):
-    #     for b in range(256):
-    #         prefix = c0[:i]
-    #         pad_byte = po.block_length - i
-    #         suffix = [pad_byte ^ bit for bit in i2[i+1:]]
-    #         prefix.append(b)
-    #         prefix += suffix
-    #         intermediate = bytes(prefix)
-    #         if po.test_ciphertext(sess,(intermediate + c1).hex())==1:
-    #             i2[i] = b ^ pad_byte
-    #             p2[i] = c0[i] ^ i2[i]
-
-    # print(p2)
     decoded = [0] * po.block_length
     i2 = [0] * po.block_length
     for i in range(15,-1,-1):
@@ -91,19 +76,13 @@ def po_attack_2blocks(po, ctx):
             mauled_c0 = bytes(ba)
 
             if po.test_ciphertext((mauled_c0 + c1),sess)==1:
-
                 i2[i] = b ^ pb
                 decoded[i] = b ^ c0[i] ^ pb
-                break
-
-
-    plain = ''.join(map(chr,decoded))
-    print(plain)
-
-
-    msg = ''
+                
+    msg = ''.join(map(chr,decoded))
+    print(msg)
     # TODO: Implement padding oracle attack for 2 blocks of messages.
-    return plain
+    return msg
 
 def po_attack(po, ctx):
     """
@@ -113,10 +92,8 @@ def po_attack(po, ctx):
     """
     ctx_blocks = list(split_into_blocks(ctx, po.block_length))
     nblocks = len(ctx_blocks)
-    # [Completed]: Implement padding oracle attack for arbitrary length message.
     P = ""
     for i in range(nblocks-1):
-        # Attack block by block
         ctx_2blocks = ctx_blocks[i] + ctx_blocks[i+1]
         p = po_attack_2blocks(po, ctx_2blocks)
 
