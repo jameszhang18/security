@@ -61,21 +61,42 @@ def po_attack_2blocks(po, ctx):
     assert(do_login_form(sess,"attacker","attacker"))
 
     c0, c1 = list(split_into_blocks(ctx, po.block_length))
-    i2 = [0] * po.block_length
-    p2 = [0] * po.block_length
-    for i in range(po.block_length-1,-1,-1):
-        for b in range(256):
-            prefix = c0[:i]
-            pad_byte = po.block_length - i
-            suffix = [pad_byte ^ bit for bit in i2[i+1:]]
-            prefix.append(b)
-            prefix += suffix
-            intermediate = bytes(prefix)
-            if po.test_ciphertext(sess,(intermediate + c1).hex())==1:
-                i2[i] = b ^ pad_byte
-                p2[i] = c0[i] ^ i2[i]
+    # i2 = [0] * po.block_length
+    # p2 = [0] * po.block_length
+    # for i in range(po.block_length-1,-1,-1):
+    #     for b in range(256):
+    #         prefix = c0[:i]
+    #         pad_byte = po.block_length - i
+    #         suffix = [pad_byte ^ bit for bit in i2[i+1:]]
+    #         prefix.append(b)
+    #         prefix += suffix
+    #         intermediate = bytes(prefix)
+    #         if po.test_ciphertext(sess,(intermediate + c1).hex())==1:
+    #             i2[i] = b ^ pad_byte
+    #             p2[i] = c0[i] ^ i2[i]
 
-    print(p2)
+    # print(p2)
+        decoded = [0] * po.block_length
+    for i in range(15,-1,-1):
+        pb = (po.block_length-i)
+        for b in range(0,256):
+            pre = c0[:i]
+            post = [pb ^ val for val in decoded[i+1:]]
+            ba = bytearray(pre)
+            ba.append(b ^ c0[i])
+            ba.extend(post)
+            assert len(ba)==po.block_length
+            mauled_c0 = bytes(ba)
+            if i==0:
+                if po.test_ciphertext(sess,(b'\x00'*16+mauled_c0 + c1).hex())==1:
+                    decoded[i] = b ^ c0[i] ^ pb
+            else:
+                if po.test_ciphertext(sess,(mauled_c0 + c1).hex())==1:
+                    decoded[i] = b ^ c0[i] ^ pb
+    
+    plain = [v ^ v1 for v,v1 in zip(c0,decoded)]
+    plain = ''.join(map(chr,plain))
+    print(plain)
 
     msg = ''
     # TODO: Implement padding oracle attack for 2 blocks of messages.
