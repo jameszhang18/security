@@ -65,7 +65,7 @@ def po_attack_2blocks(po, ctx):
 
     decoded = [0] * po.block_length
     i2 = [0] * po.block_length
-    for i in range(15,-1,-1):
+    for i in reversed(range(16)):
         pb = (po.block_length-i)
         for b in range(0,256):
             pre = c0[:i]
