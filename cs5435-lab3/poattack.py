@@ -115,16 +115,28 @@ def po_attack(po, ctx):
     """
     ctx_blocks = list(split_into_blocks(ctx, po.block_length))
     nblocks = len(ctx_blocks)
-    # TODO: Implement padding oracle attack for arbitrary length message.
+    # [Completed]: Implement padding oracle attack for arbitrary length message.
+    P = ""
+    for i in xrange(nblocks-1):
+        print '\n=== Block: {}/{} ==='.format(i, nblocks)
+        t_start = time.time()
 
+        # Attack block by block
+        ctx_2blocks = ctx_blocks[i] + ctx_blocks[i+1]
+        p = po_attack_2blocks(po, ctx_2blocks)
+        P = P + p 
 
+        t_end = time.time() 
+        print 'Time: {}s'.format(t_end-t_start) 
+    return P
 
 def do_attack(hex_cookie):
     po = PaddingOracle(SETCOINS_FORM_URL)
-    po_attack_2blocks(po,bytes.fromhex(hex_cookie))
+    po_attack(po,bytes.fromhex(hex_cookie))
 
 if __name__ == "__main__":
-    hex_cookie = "e9fae094f9c779893e11833691b6a0cd3a161457fa8090a7a789054547195e60"
+    hex_cookie="e9fae094f9c779893e11833691b6a0cd3a161457fa8090a7a789054547195e606035577aaa2c57ddc937af6fa82c013d"
+    # hex_cookie = "e9fae094f9c779893e11833691b6a0cd3a161457fa8090a7a789054547195e60"
     print("sss")
     do_attack(hex_cookie)
 
