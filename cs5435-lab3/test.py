@@ -166,7 +166,7 @@ def get_admin_cookie():
 
 
 if __name__ == '__main__':
-    # do_attack("e9fae094f9c779893e11833691b6a0cd3a161457fa8090a7a789054547195e606035577aaa2c57ddc937af6fa82c013d")
-    # do_attack("e9fae094f9c779893e11833691b6a0cd3a161457fa8090a7a789054547195e606035577aaa2c57ddc937af6fa82c013d")
-    do_attack(testCookie())
+    do_attack("e9fae094f9c779893e11833691b6a0cd3a161457fa8090a7a789054547195e60")
+    #do_attack("e9fae094f9c779893e11833691b6a0cd3a161457fa8090a7a789054547195e606035577aaa2c57ddc937af6fa82c013d")
+    #do_attack(testCookie())
     pass

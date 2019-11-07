@@ -34,12 +34,12 @@ class PaddingOracle(object):
     #you'll need to send the provided ciphertext
     #as the admin cookie, retrieve the request,
     #and see whether there was a padding error or not.
-    def test_ciphertext(self,sess, ct):
+    def test_ciphertext(self,ct,sess):
+
         response = sess.post(self.url, {}, cookies={'admin': ct.hex()})
-        #print(response.text)
-        if 'Unspecified error.' in response.text:
-            return -1
-        elif 'Bad padding for admin cookie!' in response.text:
+        if 'Unspecified error.' in str(response.content):
+            return 0
+        elif 'Bad padding for admin cookie!' in str(response.content):
             return 0
         else:
             return 1
@@ -79,27 +79,24 @@ def po_attack_2blocks(po, ctx):
 
     # print(p2)
     decoded = [0] * po.block_length
-
+    i2 = [0] * po.block_length
     for i in range(15,-1,-1):
         pb = (po.block_length-i)
         for b in range(0,256):
             pre = c0[:i]
-            post = [pb ^ val for val in decoded[i+1:]]
+            post = [pb ^ val for val in i2[i+1:]]
             ba = bytearray(pre)
-            ba.append(b ^ c0[i])
+            ba.append(b)
             ba.extend(post)
-            assert len(ba)==po.block_length
             mauled_c0 = bytes(ba)
-            if i==0:
-                if po.test_ciphertext(sess,(b'\x00'*16+mauled_c0 + c1))==1:
-                    decoded[i] = b ^ c0[i] ^ pb
-                    break
-            else:
-                if po.test_ciphertext(sess,(mauled_c0 + c1))==1:
-                    decoded[i] = b ^ c0[i] ^ pb
-                    break
-    
-   # plain = [v ^ v1 for v,v1 in zip(c0,decoded)]
+
+            if po.test_ciphertext((mauled_c0 + c1),sess)==1:
+
+                i2[i] = b ^ pb
+                decoded[i] = b ^ c0[i] ^ pb
+                break
+
+
     plain = ''.join(map(chr,decoded))
     print(plain)
 
@@ -132,8 +129,8 @@ def do_attack(hex_cookie):
     po_attack(po,bytes.fromhex(hex_cookie))
 
 if __name__ == "__main__":
-    # hex_cookie="e9fae094f9c779893e11833691b6a0cd3a161457fa8090a7a789054547195e606035577aaa2c57ddc937af6fa82c013d"
-    hex_cookie = "e9fae094f9c779893e11833691b6a0cd3a161457fa8090a7a789054547195e60"
+    hex_cookie="e9fae094f9c779893e11833691b6a0cd3a161457fa8090a7a789054547195e606035577aaa2c57ddc937af6fa82c013d"
+    #hex_cookie = "e9fae094f9c779893e11833691b6a0cd3a161457fa8090a7a789054547195e60"
     do_attack(hex_cookie)
 
 
