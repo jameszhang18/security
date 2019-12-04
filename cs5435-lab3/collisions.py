@@ -21,5 +21,5 @@ def check_collisions(key, colls):
 if __name__=='__main__':
     #Look in the source code of the app to
     #find the key used for hashing.
-    key = None
+    key = b'\x00'*16
     colls = find_collisions(key)

@@ -22,24 +22,19 @@ class Encryption(object):
             self._key = os.urandom(self._block_size_bytes)
         else:
             self._key = in_key
+
+    # reference: https://cryptography.io/en/latest/hazmat/primitives/symmetric-encryption/#cryptography.hazmat.primitives.ciphers.modes.GCM
     def encrypt(self, key, plaintext, associated_data=b"authenticated but not encrypted payload"):
         # Generate a random 96-bit IV.
         iv = os.urandom(12)
 
-        # Construct an AES-GCM Cipher object with the given key and a
-        # randomly generated IV.
         encryptor = Cipher(
             algorithms.AES(key),
             modes.GCM(iv),
             backend=default_backend()
         ).encryptor()
-
-        # associated_data will be authenticated but not encrypted,
-        # it must also be passed in on decryption.
         encryptor.authenticate_additional_data(associated_data)
 
-        # Encrypt the plaintext and get the associated ciphertext.
-        # GCM does not require padding.
         ciphertext = encryptor.update(plaintext) + encryptor.finalize()
 
         return (iv + encryptor.tag + ciphertext)
@@ -55,12 +50,8 @@ class Encryption(object):
             backend=default_backend()
         ).decryptor()
 
-        # We put associated_data back in or the tag will fail to verify
-        # when we finalize the decryptor.
         decryptor.authenticate_additional_data(associated_data)
 
-        # Decryption gets us the authenticated plaintext.
-        # If the tag does not match an InvalidTag exception will be raised.
         return decryptor.update(ciphertext) + decryptor.finalize()
         
     # def encrypt(self, msg):

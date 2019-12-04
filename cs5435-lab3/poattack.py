@@ -48,7 +48,7 @@ def split_into_blocks(msg, l):
         yield msg[:l]
         msg = msg[l:]
 
-# reference:
+# reference: https://en.wikipedia.org/wiki/Padding_oracle_attack
 def po_attack_2blocks(po, ctx):
     """Given two blocks of cipher texts, it can recover the first block of
     the message.
